@@ -26,6 +26,7 @@ public class Server {
     @Column(unique = true)
     @NotEmpty(message = "IP Address cannot be empty or null")
     private String ipAddress;
+
     private String name;
     private String memory;
     private String type;

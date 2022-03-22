@@ -6,6 +6,7 @@ import io.getarrays.server.model.Server;
 import io.getarrays.server.service.implementations.ServerServiceImpl;
 import lombok.RequiredArgsConstructor;
 
+import static io.getarrays.server.enumeration.Status.SERVER_UP;
 import static org.springframework.http.HttpStatus.CREATED;
 import static org.springframework.http.HttpStatus.OK;
 
@@ -57,7 +58,7 @@ public class ServerResource {
                         .builder()
                         .timeStamp(now())
                         .data(Map.of("servers", server))
-                        .message(server.getStatus() == Status.SERVER_UP ? "Ping sucess" : "Ping failed")
+                        .message(server.getStatus() == SERVER_UP ? "Ping success" : "Ping failed")
                         .status(OK)
                         .statusCode(OK.value())
                         .build()
@@ -66,12 +67,12 @@ public class ServerResource {
     }
 
     @PostMapping("/save")
-    public ResponseEntity<Response> saveServer(@RequestBody @Valid Server server) throws IOException {
+    public ResponseEntity<Response> saveServer(@RequestBody @Valid Server server) {
         return ResponseEntity.ok(
                 Response
                         .builder()
                         .timeStamp(now())
-                        .data(Map.of("servers", server))
+                        .data(Map.of("servers", serverService.create(server)))
                         .message("Server created")
                         .status(CREATED)
                         .statusCode(CREATED.value())
@@ -112,7 +113,7 @@ public class ServerResource {
 
     @GetMapping(path = "/image/{fileName}", produces = IMAGE_PNG_VALUE)
     public byte[] getServerImage(@PathVariable("fileName") String fileName) throws IOException {
-        return Files.readAllBytes(Paths.get(System.getProperty("user.home") + "Download/images/" + fileName));
+        return Files.readAllBytes(Paths.get(System.getProperty("user.home") + "/Downloads/images/" + fileName));
 
     }
 }
